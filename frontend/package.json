@@ -1,0 +1,13 @@
+{
+  "name": "frontend",
+  "type": "module",
+  "scripts": {
+    "dev": "imba serve",
+    "build": "imba build",
+    "preview": "imba preview"
+  },
+  "devDependencies": {
+    "imba": "^2.0.0-alpha.251",
+    "vite": "^8.0.16"
+  }
+}
