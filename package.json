@@ -1,0 +1,24 @@
+{
+  "name": "minebot",
+  "bin": {
+    "imba-project": "bin"
+  },
+  "version": "0.0.0",
+  "scripts": {
+    "test": "./bin blue! -c blue",
+    "dev": "imba build -w main.imba",
+    "build": "imba build main.imba",
+    "sync": "npm i && npm run build && npm link",
+    "prepack": "npm i && npm run build",
+    "check": "npm pack --dry-run"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "commander": "^15.0.0"
+  },
+  "devDependencies": {
+    "imba": "^2.0.0-alpha.251"
+  }
+}
