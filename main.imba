@@ -3,20 +3,54 @@ global.E = do console.error(...$0); process.exit(1)
 import 'imba/colors'
 import { program } from 'commander'
 import { version } from './package.json'
+import mineflayer from 'mineflayer'
+# import { mineflayer as mineflayerViewer } from 'prismarine-viewer'
 
 program
 	.name("binary-name")
 	.description("CLI tool made with imba")
-	.argument('<text>', 'text to log')
-	.option('-c, --color <color>', 'color of logged string')
+	.argument('<name>', 'bot name')
+	.option('-p, --port <port>', 'server port')
+	.option('--ip <ip>', 'server ip')
 	.version(version)
 	.showHelpAfterError!
 
-def main
-	program.parse!
-	let opts = program.opts!
-	let args = program.args
-	let s = args[0]
-	console.log s[opts.color] or s
+# def main
+# program.parse!
+# let opts = program.opts!
+# let args = program.args
+# let s = args[0]
+# console.log s[opts.color] or s
 
-main!
+# main!
+
+program.parse!
+let opts = program.opts!
+let args = program.args
+let botName = args[0]
+
+
+const bot = mineflayer.createBot({
+	host: opts.ip or 'localhost' # minecraft server ip
+	username: botName # username to join as if auth is `offline`, else a unique identifier for this account. Switch if you want to change accounts
+	auth: 'offline' # for offline mode servers, you can set this to 'offline'
+	port: opts.port or 25565,   # set if you need a port that isn't 25565
+	# version: false,           # only set if you need a specific version or snapshot (ie: "1.8.9" or "1.16.5"), otherwise it's set automatically
+	# password: '12345678'      # set if you want to use password-based auth (may be unreliable). If specified, the `username` must be an email
+})
+
+bot.on('chat', do(username, message)
+	if username === bot.username
+		return
+	bot.chat(message)
+)
+
+
+bot.once('spawn', do
+	console.log("{botName} spawned!")
+	# mineflayerViewer(bot, { port: 3007, firstPerson: true }) // port is the minecraft server port, if first person is false, you get a bird's-eye view
+)
+
+// Log errors and kick reasons:
+bot.on('kicked', console.log)
+bot.on('error', console.log)
