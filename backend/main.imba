@@ -93,6 +93,26 @@ io.on('connection', do(socket)
 			mineflayerViewer(bot, viewerOptions)
 			callback(viewerOptions.firstPerson)
 	)
+
+	socket.on('move', do(direction, state)
+		switch direction
+			when "forward"
+				bot.setControlState('forward', state)
+				break
+			when "back"
+				bot.setControlState('back', state)
+				break
+			when "right"
+				bot.setControlState('right', state)
+				break
+			when "left"
+				bot.setControlState('left', state)
+				break
+			when "up"
+				bot.setControlState('jump', state)
+				break
+			# TODO: Handle sneak and sprint
+	)
 )
 
 server.listen(opts.port || 3000)
