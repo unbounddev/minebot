@@ -63,13 +63,13 @@ bot.on('chat', do(username, message)
 	bot.chat(message)
 )
 
+const viewerOptions =
+	port: botPort
+	firstPerson: false
 
 bot.once('spawn', do
 	console.log("{botName} spawned!")
-	mineflayerViewer(bot, { 
-		port: botPort
-		# firstPerson: true
-	}) # port is the minecraft server port, if first person is false, you get a bird's-eye view
+	mineflayerViewer(bot, viewerOptions) # port is the minecraft server port, if first person is false, you get a bird's-eye view
 )
 
 // Log errors and kick reasons:
@@ -78,9 +78,20 @@ bot.on('error', console.log)
 
 io.on('connection', do(socket)
 	console.log("a user connected: {socket.id}")
-	socket.emit("message", "http://localhost:{botPort}")
+	socket.emit("message", {
+		url: "http://localhost:{botPort}"
+		firstPerson: false
+	})
 	socket.on('disconnect', do(reason)
 		console.log("user disconnected")
+	)
+	
+	socket.on('pov', do(callback)
+		if bot.viewer
+			bot.viewer.close!
+			viewerOptions.firstPerson = !viewerOptions.firstPerson
+			mineflayerViewer(bot, viewerOptions)
+			callback(viewerOptions.firstPerson)
 	)
 )
 
